@@ -7,8 +7,10 @@ class TextColor():
     cyan   = "\033[36m"
     white  = "\033[37m"
     pink   = "\033[95m"
-### end of class TextColor():
+    black  = "\033[30m"
 
+### end of class TextColor():
+"""
 print(TextColor().red    + '■', end='')
 print(TextColor().green  + '■', end='')
 print(TextColor().yellow + '■', end='')
@@ -17,4 +19,5 @@ print(TextColor().purple + '■', end='')
 print(TextColor().cyan   + '■', end='')
 print(TextColor().white  + '■', end='')
 print(TextColor().pink   + '■', end='')
-print()
+print(TextColor().black + '■', end='')
+"""

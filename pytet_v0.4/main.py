@@ -1,7 +1,5 @@
-from ctetris import *
 from tetris import *
 from random import *
-from color_print import *
 
 import os
 import sys
@@ -18,36 +16,19 @@ def clearScreen(numlines=100):
 		print('\n' * numlines)
 	return
 
-def	chooseColor(n):
-	if n == 1:
-		return TextColor().red
-	elif n == 2:
-		return TextColor().green
-	elif n == 3:
-		return TextColor().yellow
-	elif n == 4:
-		return TextColor().blue
-	elif n == 5:
-		return TextColor().purple
-	elif n == 6:
-		return TextColor().cyan
-	elif n == 7:
-		return TextColor().pink
-			
-
 def printScreen(board):
 	clearScreen()
 	array = board.oScreen.get_array()
+
 	for y in range(board.oScreen.get_dy()-Tetris.iScreenDw):
 		line = ''
 		for x in range(Tetris.iScreenDw, board.oScreen.get_dx()-Tetris.iScreenDw):
 			if array[y][x] == 0:
-				line += TextColor().white + '□'
-				#line += TextColor().black + '□'
-			elif array[y][x] <= 7:
-				line += chooseColor(array[y][x]) + '■'
+				line += '□'
+			elif array[y][x] == 1:
+				line += '■'
 			else:
-				line += TextColor().white + 'XX'
+				line += 'XX'
 		print(line)
 
 	print()
@@ -115,22 +96,22 @@ def initSetOfBlockArrays():
                     [ 0, 0, 1, 0 ],     
                     [ 0, 0, 1, 0 ],     
                     [ 0, 0, 1, 0 ] ],   
-                  [ [2, 0, 0],          # J shape
-                    [2, 2, 2],          
+                  [ [1, 0, 0],          # J shape
+                    [1, 1, 1],          
                     [0, 0, 0] ],
-                  [ [0, 0, 3],          # L shape
-                    [3, 3, 3],          
+                  [ [0, 0, 1],          # L shape
+                    [1, 1, 1],          
                     [0, 0, 0] ],        
-                  [ [4, 4],             # O shape
-                    [4, 4] ],           
-                  [ [0, 5, 5],          # S shape
-                    [5, 5, 0],          
+                  [ [1, 1],             # O shape
+                    [1, 1] ],           
+                  [ [0, 1, 1],          # S shape
+                    [1, 1, 0],          
                     [0, 0, 0] ],
-                  [ [0, 6, 0],          # T shape    
-                    [6, 6, 6],          
+                  [ [0, 1, 0],          # T shape    
+                    [1, 1, 1],          
                     [0, 0, 0] ],
-                  [ [7, 7, 0],          # Z shape
-                    [0, 7, 7],          
+                  [ [1, 1, 0],          # Z shape
+                    [0, 1, 1],          
                     [0, 0, 0] ]         
                 ]
 
@@ -168,8 +149,8 @@ def processKey(board, key):
 if __name__ == "__main__":
 	setOfBlockArrays = initSetOfBlockArrays()
 
-	CTetris.init(setOfBlockArrays)
-	board = CTetris(20, 15)
+	Tetris.init(setOfBlockArrays)
+	board = Tetris(20, 15)
 
 	idxBlockType = randint(0, nBlocks-1)
 	key = '0' + str(idxBlockType)
