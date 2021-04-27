@@ -1,0 +1,6 @@
+*.exe
+*.o
+*.stackdump
+*.swp
+__pycache__
+*.pyc
