@@ -14,6 +14,8 @@
 #include <arpa/inet.h>
 #include <signal.h>
 
+#include "Tetris.h"
+
 using namespace std;
 
 
@@ -84,41 +86,41 @@ void registerAlarm() {
 #define MAX_BLK_TYPES 7
 #define MAX_BLK_DEGREES 4
 
-int T0D0[] = { 1, 1, 1, 1, -1 };
-int T0D1[] = { 1, 1, 1, 1, -1 };
-int T0D2[] = { 1, 1, 1, 1, -1 };
-int T0D3[] = { 1, 1, 1, 1, -1 };
+int T0D0[] = { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1 };//I
+int T0D1[] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, -1 };
+int T0D2[] = { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 };
+int T0D3[] = { 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1 };
 
-int T1D0[] = { 0, 1, 0, 1, 1, 1, 0, 0, 0, -1 };
-int T1D1[] = { 0, 1, 0, 0, 1, 1, 0, 1, 0, -1 };
-int T1D2[] = { 0, 0, 0, 1, 1, 1, 0, 1, 0, -1 };
-int T1D3[] = { 0, 1, 0, 1, 1, 0, 0, 1, 0, -1 };
+int T1D0[] = { 1, 0, 0, 1, 1, 1, 0, 0, 0, -1 };//J
+int T1D1[] = { 0, 1, 1, 0, 1, 0, 0, 1, 0, -1 };
+int T1D2[] = { 0, 0, 0, 1, 1, 1, 0, 0, 1, -1 };
+int T1D3[] = { 0, 1, 0, 0, 1, 0, 1, 1, 0, -1 };
 
-int T2D0[] = { 1, 0, 0, 1, 1, 1, 0, 0, 0, -1 };
-int T2D1[] = { 0, 1, 1, 0, 1, 0, 0, 1, 0, -1 };
-int T2D2[] = { 0, 0, 0, 1, 1, 1, 0, 0, 1, -1 };
-int T2D3[] = { 0, 1, 0, 0, 1, 0, 1, 1, 0, -1 };
+int T2D0[] = { 0, 0, 1, 1, 1, 1, 0, 0, 0, -1 };//L
+int T2D1[] = { 0, 1, 0, 0, 1, 0, 0, 1, 1, -1 };
+int T2D2[] = { 0, 0, 0, 1, 1, 1, 1, 0, 0, -1 };
+int T2D3[] = { 1, 1, 0, 0, 1, 0, 0, 1, 0, -1 };
 
-int T3D0[] = { 0, 0, 1, 1, 1, 1, 0, 0, 0, -1 };
-int T3D1[] = { 0, 1, 0, 0, 1, 0, 0, 1, 1, -1 };
-int T3D2[] = { 0, 0, 0, 1, 1, 1, 1, 0, 0, -1 };
-int T3D3[] = { 1, 1, 0, 0, 1, 0, 0, 1, 0, -1 };
+int T3D0[] = { 1, 1, 1, 1, -1 };//O
+int T3D1[] = { 1, 1, 1, 1, -1 };
+int T3D2[] = { 1, 1, 1, 1, -1 };
+int T3D3[] = { 1, 1, 1, 1, -1 };
 
-int T4D0[] = { 0, 1, 0, 1, 1, 0, 1, 0, 0, -1 };
-int T4D1[] = { 1, 1, 0, 0, 1, 1, 0, 0, 0, -1 };
-int T4D2[] = { 0, 1, 0, 1, 1, 0, 1, 0, 0, -1 };
-int T4D3[] = { 1, 1, 0, 0, 1, 1, 0, 0, 0, -1 };
+int T4D0[] = { 0, 1, 1, 1, 1, 0, 0, 0, 0, -1 };//S
+int T4D1[] = { 0, 1, 0, 0, 1, 1, 0, 0, 1, -1 };
+int T4D2[] = { 0, 0, 0, 0, 1, 1, 1, 1, 0, -1 };
+int T4D3[] = { 1, 0, 0, 1, 1, 0, 0, 1, 0, -1 };
 
-int T5D0[] = { 0, 1, 0, 0, 1, 1, 0, 0, 1, -1 };
-int T5D1[] = { 0, 0, 0, 0, 1, 1, 1, 1, 0, -1 };
-int T5D2[] = { 0, 1, 0, 0, 1, 1, 0, 0, 1, -1 };
-int T5D3[] = { 0, 0, 0, 0, 1, 1, 1, 1, 0, -1 };
+int T5D0[] = { 0, 1, 0, 1, 1, 1, 0, 0, 0, -1 };//T
+int T5D1[] = { 0, 1, 0, 0, 1, 1, 0, 1, 0, -1 };
+int T5D2[] = { 0, 0, 0, 1, 1, 1, 0, 1, 0, -1 };
+int T5D3[] = { 0, 1, 0, 1, 1, 0, 0, 1, 0, -1 };
 
-int T6D0[] = { 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1 };
-int T6D1[] = { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 };
-int T6D2[] = { 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1 };
-int T6D3[] = { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 };
-  
+int T6D0[] = { 1, 1, 0, 0, 1, 1, 0, 0, 0, -1 };//Z
+int T6D1[] = { 0, 0, 1, 0, 1, 1, 0, 1, 0, -1 };
+int T6D2[] = { 0, 0, 0, 1, 1, 0, 0, 1, 1, -1 };
+int T6D3[] = { 0, 1, 0, 1, 1, 0, 1, 0, 0, -1 };
+ 
 int *setOfCBlockArrays[] = {
   T0D0, T0D1, T0D2, T0D3,
   T1D0, T1D1, T1D2, T1D3,
@@ -128,6 +130,51 @@ int *setOfCBlockArrays[] = {
   T5D0, T5D1, T5D2, T5D3,
   T6D0, T6D1, T6D2, T6D3,
 };
+
+const char* color_red    = "\033[31m";
+const char* color_green  = "\033[32m";
+const char* color_yellow = "\033[33m";
+const char* color_blue   = "\033[34m";
+const char* color_purple = "\033[35m";
+const char* color_cyan   = "\033[36m";
+const char* color_normal  = "\033[37m";
+const char* color_pink   = "\033[95m";
+const char* color_black  = "\033[30m";
+
+#if 1
+void drawScreen(Tetris *board)
+{
+  int dy = board->oScreen->get_dy();
+  int dx = board->oScreen->get_dx();
+  int dw = board->iScreenDw;
+  int **array = board->oScreen->get_array();
+  //system("clear");
+
+  for (int y = 0; y < dy - dw + 1; y++) {
+    for (int x = dw - 1; x < dx - dw + 1; x++) {
+      if (array[y][x] == 0)
+	cout << color_normal << "□" << color_normal;
+      else if (array[y][x] == 2) //O
+	cout << color_blue << "■" << color_normal;
+      else if (array[y][x] == 3) //T
+	cout << color_cyan << "■" << color_normal;
+      else if (array[y][x] == 4) //J
+	cout << color_green << "■" << color_normal;
+      else if (array[y][x] == 5) //L
+	cout << color_yellow << "■" << color_normal;
+      else if (array[y][x] == 6) //Z
+	cout << color_pink << "■" << color_normal;
+      else if (array[y][x] == 7) //S
+	cout << color_purple << "■" << color_normal;
+      else if (array[y][x] == 8) //I
+	cout << color_red << "■" << color_normal;
+      else if (array[y][x] == 1) // wall
+	cout << color_normal << "■" << color_normal;
+    }
+    cout << endl;
+  }
+}
+#endif
 
 #if 0
 void drawScreen(CTetris *board)
@@ -181,9 +228,11 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-#if 0
-  CTetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
-  CTetris *board = new CTetris(dy, dx);
+#if 1
+  //CTetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
+  //CTetris *board = new CTetris(dy, dx);
+  Tetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
+  Tetris *board = new Tetris(dy, dx);
   TetrisState state;
 
   srand((unsigned int)time(NULL));
@@ -192,7 +241,7 @@ int main(int argc, char *argv[]) {
 
   registerAlarm();
   while (key != 'q') {
-#if 0
+#if 1
     state = board->accept(key);
     if (state == NewBlock) {
       key = (char)('0' + rand() % MAX_BLK_TYPES);
@@ -209,7 +258,7 @@ int main(int argc, char *argv[]) {
     key = getch();
     cout << key << endl;
   }
-#if 0
+#if 1
   delete board;
 #endif
 
