@@ -3,6 +3,19 @@
 
 enum TetrisState { Running, NewBlock, Finished };
 
+struct Idx {
+  int x;
+  int y;
+  int z;
+};
+
+struct BlockState {
+  int idxBlockType;
+  int idxBlockDegree;
+  int top;
+  int left;
+};
+
 class Tetris {
  public:
   Tetris(int dy, int dx);
@@ -12,30 +25,22 @@ class Tetris {
   ~Tetris();
 
   Matrix* oScreen; 
-  int iScreenDw;
+  static int iScreenDw;
   static Matrix** setOfBlockObjects;
   
-
  private:
   int* arrayScreen();
   void deleteFullLines();
-  void printSetOfBlock(); //test
+  void printSetOfBlock(); //testcode
 
   bool justStarted;
-  int nBlockTypes = 0;
-  int nBlockDegrees = 0;
-  int iScreenDy = 0;
-  int iScreenDx = 0;
-  int arrayScreenDy = 0;
-  int arrayScreenDx = 0;
+  static int nBlockTypes;
+  static int nBlockDegrees;
+  Idx iScreenD;
+  Idx arrayScreenD;
   int* tempScreen;
   Matrix* iScreen;
-  int top;
-  int left;
-  Matrix* currBlk;
-  int idxBlockType;
-  int idxBlockDegree;
-  
   TetrisState state;
-  
+  BlockState currBlkState;
+  Matrix* currBlk;
 };
