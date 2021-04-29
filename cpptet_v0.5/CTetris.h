@@ -10,5 +10,5 @@ class CTetris : public Tetris {
 
  private:
   static Matrix** setOfCBlockObjects;
-  Matrix* currCBlk;
+  Matrix currCBlk;
 };

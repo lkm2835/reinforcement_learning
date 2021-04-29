@@ -149,8 +149,8 @@ void drawScreen(CTetris *board)
   int dx = board->oScreen->get_dx();
   int dw = board->iScreenDw;
   int **array = board->oScreen->get_array();
-  system("clear");
-
+  //system("clear");
+  
   for (int y = 0; y < dy - dw + 1; y++) {
     for (int x = dw - 1; x < dx - dw + 1; x++) {
       if (array[y][x] == 0)

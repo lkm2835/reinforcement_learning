@@ -47,5 +47,5 @@ class Tetris {
   Idx arrayScreenD;
   int* tempScreen;
   TetrisState state;
-  Matrix* currBlk;
+  Matrix currBlk;
 };

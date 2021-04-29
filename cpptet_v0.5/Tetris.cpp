@@ -12,7 +12,6 @@ Tetris::Tetris(int dy, int dx) {
   iScreenD.x = dx;
   iScreen = new Matrix(arrayScreen(), arrayScreenD.y, arrayScreenD.x);
   oScreen = new Matrix(iScreen);
-  currBlk = new Matrix();
   justStarted = true;
 }
 
@@ -49,7 +48,8 @@ void Tetris::init(int *setOfBlockArrays[], int blkTypes, int blkDegrees) {
 TetrisState Tetris::accept(char key) {
   state = Running;
   Matrix tempBlk;
-  
+  int currBlkStateBottom, currBlkStateRight;
+
   if (key >= '0' && key <= ('0' + nBlock.type - 1)) {
     if (justStarted == false) {
       deleteFullLines();
@@ -57,13 +57,13 @@ TetrisState Tetris::accept(char key) {
     iScreen->paste(oScreen, 0, 0);
     currBlkState.shape.type = key - '0';
     currBlkState.shape.degree = 0;
-    delete currBlk;
-    currBlk = new Matrix(setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree].get_dy(), setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree].get_dx());
-    *currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
+    currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
     currBlkState.top = 0;
-    currBlkState.left = iScreenDw + iScreenD.x / 2 - currBlk->get_dx() / 2;
-    tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkState.top + currBlk->get_dy(), currBlkState.left + currBlk->get_dy());
-    tempBlk = tempBlk.binary()->add(currBlk->binary());
+    currBlkState.left = iScreenDw + iScreenD.x / 2 - currBlk.get_dx() / 2;
+    currBlkStateBottom = currBlkState.top + currBlk.get_dy();
+    currBlkStateRight = currBlkState.left + currBlk.get_dx();
+    tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);
+    tempBlk = tempBlk.binary()->add(currBlk.binary());
     justStarted = false;
     cout << endl;
 
@@ -81,18 +81,22 @@ TetrisState Tetris::accept(char key) {
   else if (key == 'w') {
     currBlkState.shape.degree += 1;
     currBlkState.shape.degree %= nBlock.degree;
-    *currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
+    currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
   }
   else if (key == ' ') {
     while(!tempBlk.anyGreaterThan(1)) {
       currBlkState.top += 1;
-      tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkState.top + currBlk->get_dy(), currBlkState.left + currBlk->get_dy());
-      tempBlk = tempBlk.binary()->add(currBlk->binary());
+      currBlkStateBottom = currBlkState.top + currBlk.get_dy();
+      currBlkStateRight = currBlkState.left + currBlk.get_dx();
+      tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);
+      tempBlk = tempBlk.binary()->add(currBlk.binary());
     }
   }
 
-  tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkState.top + currBlk->get_dy(), currBlkState.left + currBlk->get_dy());
-  tempBlk = tempBlk.binary()->add(currBlk->binary());
+  currBlkStateBottom = currBlkState.top + currBlk.get_dy();
+  currBlkStateRight = currBlkState.left + currBlk.get_dx();
+  tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);
+  tempBlk = tempBlk.binary()->add(currBlk.binary());
   
   if (tempBlk.anyGreaterThan(1)) { // undo
     if (key == 'a') {
@@ -108,14 +112,16 @@ TetrisState Tetris::accept(char key) {
     else if (key == 'w') {
       currBlkState.shape.degree += (nBlock.degree - 1);
       currBlkState.shape.degree %= nBlock.degree;
-      *currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
+      currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
     }
     else if (key == ' ') {
       currBlkState.top -= 1;
       state = NewBlock;
     }
-    tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkState.top + currBlk->get_dy(), currBlkState.left + currBlk->get_dy());
-    tempBlk = tempBlk.add(currBlk);
+    currBlkStateBottom = currBlkState.top + currBlk.get_dy();
+    currBlkStateRight = currBlkState.left + currBlk.get_dx();
+    tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);
+    tempBlk = tempBlk.add(&currBlk);
   }
   oScreen->paste(iScreen, 0, 0);
   oScreen->paste(&tempBlk, currBlkState.top, currBlkState.left);
@@ -147,7 +153,8 @@ int* Tetris::arrayScreen() {
 
 void Tetris::deleteFullLines() {
   iScreen->paste(oScreen, 0, 0);
-  int currBlkBottom = (currBlkState.top + currBlk->get_dy()) < iScreenD.y ? (currBlkState.top + currBlk->get_dy()) : iScreenD.y;
+  int currBlkBottom = currBlkState.top + currBlk.get_dy();
+  currBlkBottom = currBlkBottom < iScreenD.y ? currBlkBottom : iScreenD.y;
 
   for (int line = currBlkState.top; line < currBlkBottom; ++line) {    
     Matrix tempBlk = iScreen->clip(line, iScreenDw, line + 1, iScreenDw + iScreenD.x);
@@ -157,6 +164,16 @@ void Tetris::deleteFullLines() {
     }
   }
   oScreen->paste(iScreen, 0, 0);
+}
+
+Tetris::~Tetris() {
+  for(int i = 0; i < nBlock.type; ++i) {
+    delete [] setOfBlockObjects[i];
+  }
+  delete setOfBlockObjects;
+  delete [] tempScreen;
+  delete oScreen;
+  delete iScreen;
 }
 
 //test
@@ -177,15 +194,4 @@ void Tetris::printSetOfBlock() {
       std::cout << std::endl;
     }
   }
-}
-
-Tetris::~Tetris() {
-  for(int i = 0; i < nBlock.type; ++i) {
-    delete [] setOfBlockObjects[i];
-  }
-  delete setOfBlockObjects;
-  delete [] tempScreen;
-  delete currBlk;
-  delete oScreen;
-  delete iScreen;
 }
