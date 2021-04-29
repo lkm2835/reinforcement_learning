@@ -9,11 +9,15 @@ struct Idx {
   int z;
 };
 
+struct BlockShape {
+  int type;
+  int degree;
+};
+
 struct BlockState {
-  int idxBlockType;
-  int idxBlockDegree;
   int top;
   int left;
+  BlockShape shape;
 };
 
 class Tetris {
@@ -22,25 +26,26 @@ class Tetris {
   static void init(int *setOfBlockArrays[], int blkTypes, int blkDegrees);
   TetrisState accept(char key);
 
-  ~Tetris();
+  virtual ~Tetris();
 
   Matrix* oScreen; 
   static int iScreenDw;
+
+ protected:  
   static Matrix** setOfBlockObjects;
-  
+  static BlockShape nBlock;
+  Matrix* iScreen;
+  BlockState currBlkState;
+ 
  private:
   int* arrayScreen();
   void deleteFullLines();
   void printSetOfBlock(); //testcode
-
+  
   bool justStarted;
-  static int nBlockTypes;
-  static int nBlockDegrees;
   Idx iScreenD;
   Idx arrayScreenD;
   int* tempScreen;
-  Matrix* iScreen;
   TetrisState state;
-  BlockState currBlkState;
   Matrix* currBlk;
 };

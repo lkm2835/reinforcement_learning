@@ -5,14 +5,14 @@
 
 Matrix** Tetris::setOfBlockObjects = nullptr;
 int Tetris::iScreenDw = 0;
-int Tetris::nBlockTypes = 0;
-int Tetris::nBlockDegrees = 0;
+BlockShape Tetris::nBlock = {0, 0};
 
 Tetris::Tetris(int dy, int dx) {
   iScreenD.y = dy;
   iScreenD.x = dx;
   iScreen = new Matrix(arrayScreen(), arrayScreenD.y, arrayScreenD.x);
   oScreen = new Matrix(iScreen);
+  currBlk = new Matrix();
   justStarted = true;
 }
 
@@ -25,19 +25,19 @@ int blkArrayLength(int *setOfBlockArrays[], int num) {
 }
 
 void Tetris::init(int *setOfBlockArrays[], int blkTypes, int blkDegrees) {
-  nBlockTypes = blkTypes;
-  nBlockDegrees = blkDegrees;
-  setOfBlockObjects = new Matrix*[nBlockTypes];
-  for(int i = 0; i < nBlockTypes; ++i) {
-    setOfBlockObjects[i] = new Matrix[nBlockDegrees];
+  nBlock.type = blkTypes;
+  nBlock.degree = blkDegrees;
+  setOfBlockObjects = new Matrix*[nBlock.type];
+  for(int i = 0; i < nBlock.type; ++i) {
+    setOfBlockObjects[i] = new Matrix[nBlock.degree];
   }
 
   int maxLength = 0;
-  for(int i = 0; i < nBlockTypes; ++i) { 
-    for(int j = 0; j < nBlockDegrees; ++j) {
-      int len = blkArrayLength(setOfBlockArrays, i * nBlockDegrees + j);
-      setOfBlockObjects[i][j] = Matrix(setOfBlockArrays[i * nBlockDegrees + j], len, len);
-      
+  for(int i = 0; i < nBlock.type; ++i) { 
+    for(int j = 0; j < nBlock.degree; ++j) {
+      int len = blkArrayLength(setOfBlockArrays, i * nBlock.degree + j);
+      setOfBlockObjects[i][j] = Matrix(setOfBlockArrays[i * nBlock.degree + j], len, len);
+      // 위에 new 안붙여도, 붙여도 정상 작동 함 , new 붙여야하나?
       if (maxLength < len) {
         maxLength = len;
       }
@@ -50,20 +50,20 @@ TetrisState Tetris::accept(char key) {
   state = Running;
   Matrix tempBlk;
   
-  if (key >= '0' && key <= ('0' + nBlockTypes - 1)) {
+  if (key >= '0' && key <= ('0' + nBlock.type - 1)) {
     if (justStarted == false) {
       deleteFullLines();
     }
-    delete iScreen;
-    iScreen = new Matrix(oScreen);
-    currBlkState.idxBlockType = key - '0';
-    currBlkState.idxBlockDegree = 0;
-    currBlk = new Matrix(setOfBlockObjects[currBlkState.idxBlockType][currBlkState.idxBlockDegree].get_dy(), setOfBlockObjects[currBlkState.idxBlockType][currBlkState.idxBlockDegree].get_dx());
-    *currBlk = setOfBlockObjects[currBlkState.idxBlockType][currBlkState.idxBlockDegree];
+    iScreen->paste(oScreen, 0, 0);
+    currBlkState.shape.type = key - '0';
+    currBlkState.shape.degree = 0;
+    delete currBlk;
+    currBlk = new Matrix(setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree].get_dy(), setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree].get_dx());
+    *currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
     currBlkState.top = 0;
     currBlkState.left = iScreenDw + iScreenD.x / 2 - currBlk->get_dx() / 2;
     tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkState.top + currBlk->get_dy(), currBlkState.left + currBlk->get_dy());
-    tempBlk = tempBlk.add(currBlk);
+    tempBlk = tempBlk.binary()->add(currBlk->binary());
     justStarted = false;
     cout << endl;
 
@@ -79,20 +79,20 @@ TetrisState Tetris::accept(char key) {
   else if (key == 'd') { currBlkState.left += 1; }
   else if (key == 's') { currBlkState.top += 1; }
   else if (key == 'w') {
-    currBlkState.idxBlockDegree += 1;
-    currBlkState.idxBlockDegree %= nBlockDegrees;
-    *currBlk = setOfBlockObjects[currBlkState.idxBlockType][currBlkState.idxBlockDegree];
+    currBlkState.shape.degree += 1;
+    currBlkState.shape.degree %= nBlock.degree;
+    *currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
   }
   else if (key == ' ') {
     while(!tempBlk.anyGreaterThan(1)) {
       currBlkState.top += 1;
       tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkState.top + currBlk->get_dy(), currBlkState.left + currBlk->get_dy());
-      tempBlk = tempBlk.add(currBlk);
+      tempBlk = tempBlk.binary()->add(currBlk->binary());
     }
   }
 
   tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkState.top + currBlk->get_dy(), currBlkState.left + currBlk->get_dy());
-  tempBlk = tempBlk.add(currBlk);
+  tempBlk = tempBlk.binary()->add(currBlk->binary());
   
   if (tempBlk.anyGreaterThan(1)) { // undo
     if (key == 'a') {
@@ -106,9 +106,9 @@ TetrisState Tetris::accept(char key) {
       state = NewBlock;
     }
     else if (key == 'w') {
-      currBlkState.idxBlockDegree += (nBlockDegrees - 1);
-      currBlkState.idxBlockDegree %= nBlockDegrees;
-      *currBlk = setOfBlockObjects[currBlkState.idxBlockType][currBlkState.idxBlockDegree];
+      currBlkState.shape.degree += (nBlock.degree - 1);
+      currBlkState.shape.degree %= nBlock.degree;
+      *currBlk = setOfBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
     }
     else if (key == ' ') {
       currBlkState.top -= 1;
@@ -147,24 +147,22 @@ int* Tetris::arrayScreen() {
 
 void Tetris::deleteFullLines() {
   iScreen->paste(oScreen, 0, 0);
-  int t = currBlkState.top;
-  for (int i = 0; i < currBlk->get_dy(); ++i) {
-    if (t >= iScreenD.y) break;
-    
-    Matrix tempBlk = iScreen->clip(t, iScreenDw, t + 1, iScreenDw + iScreenD.x);
-    if (iScreenD.x == tempBlk.sum()) {
-      tempBlk = iScreen->clip(0, iScreenDw, t, iScreenDw + iScreenD.x);
+  int currBlkBottom = (currBlkState.top + currBlk->get_dy()) < iScreenD.y ? (currBlkState.top + currBlk->get_dy()) : iScreenD.y;
+
+  for (int line = currBlkState.top; line < currBlkBottom; ++line) {    
+    Matrix tempBlk = iScreen->clip(line, iScreenDw, line + 1, iScreenDw + iScreenD.x);
+    if (iScreenD.x == tempBlk.binary()->sum()) {
+      tempBlk = iScreen->clip(0, iScreenDw, line, iScreenDw + iScreenD.x);
       iScreen->paste(&tempBlk, 1, iScreenDw);
     }
-    t += 1;
   }
   oScreen->paste(iScreen, 0, 0);
 }
 
 //test
 void Tetris::printSetOfBlock() {
-  for (int i = 0; i < nBlockTypes; ++i) { 
-    for (int j = 0; j < nBlockDegrees; ++j) {
+  for (int i = 0; i < nBlock.type; ++i) { 
+    for (int j = 0; j < nBlock.degree; ++j) {
       int** tempArr = setOfBlockObjects[i][j].get_array();
       int dy = setOfBlockObjects[i][j].get_dy();
       int dx = setOfBlockObjects[i][j].get_dx();
@@ -177,13 +175,12 @@ void Tetris::printSetOfBlock() {
         std::cout << std::endl;
       }
       std::cout << std::endl;
-
     }
   }
 }
 
 Tetris::~Tetris() {
-  for(int i = 0; i < nBlockTypes; ++i) {
+  for(int i = 0; i < nBlock.type; ++i) {
     delete [] setOfBlockObjects[i];
   }
   delete setOfBlockObjects;

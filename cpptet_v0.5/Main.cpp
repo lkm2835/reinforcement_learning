@@ -15,6 +15,7 @@
 #include <signal.h>
 
 #include "Tetris.h"
+#include "CTetris.h"
 
 using namespace std;
 
@@ -142,41 +143,6 @@ const char* color_pink   = "\033[95m";
 const char* color_black  = "\033[30m";
 
 #if 1
-void drawScreen(Tetris *board)
-{
-  int dy = board->oScreen->get_dy();
-  int dx = board->oScreen->get_dx();
-  int dw = board->iScreenDw;
-  int **array = board->oScreen->get_array();
-  //system("clear");
-
-  for (int y = 0; y < dy - dw + 1; y++) {
-    for (int x = dw - 1; x < dx - dw + 1; x++) {
-      if (array[y][x] == 0)
-	cout << color_normal << "□" << color_normal;
-      else if (array[y][x] == 2) //O
-	cout << color_blue << "■" << color_normal;
-      else if (array[y][x] == 3) //T
-	cout << color_cyan << "■" << color_normal;
-      else if (array[y][x] == 4) //J
-	cout << color_green << "■" << color_normal;
-      else if (array[y][x] == 5) //L
-	cout << color_yellow << "■" << color_normal;
-      else if (array[y][x] == 6) //Z
-	cout << color_pink << "■" << color_normal;
-      else if (array[y][x] == 7) //S
-	cout << color_purple << "■" << color_normal;
-      else if (array[y][x] == 8) //I
-	cout << color_red << "■" << color_normal;
-      else if (array[y][x] == 1) // wall
-	cout << color_normal << "■" << color_normal;
-    }
-    cout << endl;
-  }
-}
-#endif
-
-#if 0
 void drawScreen(CTetris *board)
 {
   int dy = board->oScreen->get_dy();
@@ -188,23 +154,23 @@ void drawScreen(CTetris *board)
   for (int y = 0; y < dy - dw + 1; y++) {
     for (int x = dw - 1; x < dx - dw + 1; x++) {
       if (array[y][x] == 0)
-	cout << color_black << "□ " << color_normal;
-      else if (array[y][x] == 1)
-	cout << color_black << "■ " << color_normal;
-      else if (array[y][x] == 2)
-	cout << color_green << "■ " << color_normal;
-      else if (array[y][x] == 3)
-	cout << color_cyan << "■ " << color_normal;
-      else if (array[y][x] == 4)
-	cout << color_blue << "■ " << color_normal;
-      else if (array[y][x] == 5)
-	cout << color_yellow << "■ " << color_normal;
-      else if (array[y][x] == 6)
-	cout << color_red << "■ " << color_normal;
-      else if (array[y][x] == 7)
-	cout << color_magenta << "■ " << color_normal;
-      else // array[y][x] == 1 // wall
-	cout << b_color_black << "■ " << color_normal;
+	cout << color_normal << "□" << color_normal;
+      else if (array[y][x] == 2) // O
+	cout << color_blue << "■" << color_normal;
+      else if (array[y][x] == 3) // T
+	cout << color_cyan << "■" << color_normal;
+      else if (array[y][x] == 4) // J
+	cout << color_green << "■" << color_normal;
+      else if (array[y][x] == 5) // L
+	cout << color_yellow << "■" << color_normal;
+      else if (array[y][x] == 6) // Z
+	cout << color_pink << "■" << color_normal;
+      else if (array[y][x] == 7) // S
+	cout << color_purple << "■" << color_normal;
+      else if (array[y][x] == 8) // I
+	cout << color_red << "■" << color_normal;
+      else // if (array[y][x] == 1) // wall
+	cout << color_normal << "■" << color_normal;
     }
     cout << endl;
   }
@@ -229,10 +195,11 @@ int main(int argc, char *argv[]) {
   }
 
 #if 1
-  //CTetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
-  //CTetris *board = new CTetris(dy, dx);
-  Tetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
-  Tetris *board = new Tetris(dy, dx);
+  CTetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
+  CTetris *board = new CTetris(dy, dx);
+  //Tetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
+  //Tetris *board = new Tetris(dy, dx);
+  
   TetrisState state;
 
   srand((unsigned int)time(NULL));
