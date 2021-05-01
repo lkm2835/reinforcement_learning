@@ -8,7 +8,11 @@ class CTetris : public Tetris {
   TetrisState accept(char key);
   ~CTetris();
 
+  Matrix* oCScreen;
+
  private:
+  void deleteFullLines();
+  Matrix* iCScreen;
   static Matrix** setOfCBlockObjects;
   Matrix currCBlk;
 };

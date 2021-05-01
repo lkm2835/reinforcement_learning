@@ -3,7 +3,8 @@
 Matrix** CTetris::setOfCBlockObjects = nullptr;
 
 CTetris::CTetris(int dy, int dx) : Tetris::Tetris(dy, dx) {
-
+  iCScreen = new Matrix(oScreen);
+  oCScreen = new Matrix(iCScreen);
 }
 
 void CTetris::init(int *setOfBlockArrays[], int blkTypes, int blkDegrees) {
@@ -22,17 +23,34 @@ void CTetris::init(int *setOfBlockArrays[], int blkTypes, int blkDegrees) {
 }
 
 TetrisState CTetris::accept(char key) {
+  if (key >= '0' && key <= ('0' + nBlock.type - 1)) {
+    if (justStarted == false) {
+      deleteFullLines();
+    }
+    iCScreen->paste(oCScreen, 0, 0);
+  }
   TetrisState state = Tetris::accept(key);
-
+  
   currCBlk = setOfCBlockObjects[currBlkState.shape.type][currBlkState.shape.degree];
   int currBlkStateBottom = currBlkState.top + currCBlk.get_dy();
   int currBlkStateRight = currBlkState.left + currCBlk.get_dx();
-  Matrix tempCBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);  
+  Matrix tempCBlk = iCScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);  
   tempCBlk = tempCBlk.add(&currCBlk);
-  
-  oScreen->paste(iScreen, 0, 0);
-  oScreen->paste(&tempCBlk, currBlkState.top, currBlkState.left);
+
+  oCScreen->paste(iCScreen, 0, 0);
+  oCScreen->paste(&tempCBlk, currBlkState.top, currBlkState.left);
   return state;
+}
+
+void CTetris::deleteFullLines() {
+  Tetris::deleteFullLines();
+  iCScreen->paste(oCScreen, 0, 0);
+
+  for (auto line = fullLine.begin(); line != fullLine.end(); ++line) {  
+    Matrix tempCBlk = iCScreen->clip(0, iScreenDw, *line, iScreenDw + iScreenD.x);
+    iCScreen->paste(&tempCBlk, 1, iScreenDw);
+  }
+  oCScreen->paste(iCScreen, 0, 0);
 }
 
 CTetris::~CTetris() {
@@ -40,4 +58,6 @@ CTetris::~CTetris() {
     delete [] setOfCBlockObjects[i];
   }
   delete setOfCBlockObjects;
+  delete oCScreen;
+  delete iCScreen;
 }

@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 #include <stdio.h>
 #include <termios.h>
 
@@ -132,48 +133,51 @@ int *setOfCBlockArrays[] = {
   T6D0, T6D1, T6D2, T6D3,
 };
 
-const char* color_red    = "\033[31m";
-const char* color_green  = "\033[32m";
-const char* color_yellow = "\033[33m";
-const char* color_blue   = "\033[34m";
-const char* color_purple = "\033[35m";
-const char* color_cyan   = "\033[36m";
-const char* color_normal  = "\033[37m";
-const char* color_pink   = "\033[95m";
-const char* color_black  = "\033[30m";
+string color_red    = "\033[31m";
+string color_green  = "\033[32m";
+string color_yellow = "\033[33m";
+string color_blue   = "\033[34m";
+string color_purple = "\033[35m";
+string color_cyan   = "\033[36m";
+string color_normal  = "\033[37m";
+string color_pink   = "\033[95m";
+string color_black  = "\033[30m";
 
 #if 1
 void drawScreen(CTetris *board)
 {
-  int dy = board->oScreen->get_dy();
-  int dx = board->oScreen->get_dx();
+  int dy = board->oCScreen->get_dy();
+  int dx = board->oCScreen->get_dx();
   int dw = board->iScreenDw;
-  int **array = board->oScreen->get_array();
-  //system("clear");
+  int **array = board->oCScreen->get_array();
+  system("clear");
   
+  string screen = ""; 
   for (int y = 0; y < dy - dw + 1; y++) {
+    string line = "";
     for (int x = dw - 1; x < dx - dw + 1; x++) {
       if (array[y][x] == 0)
-	cout << color_normal << "□" << color_normal;
+	      line += color_normal + "□" + color_normal;
       else if (array[y][x] == 2) // O
-	cout << color_blue << "■" << color_normal;
+	      line += color_blue   + "■" + color_normal;
       else if (array[y][x] == 3) // T
-	cout << color_cyan << "■" << color_normal;
+	      line += color_cyan   + "■" + color_normal;
       else if (array[y][x] == 4) // J
-	cout << color_green << "■" << color_normal;
+	      line += color_green  + "■" + color_normal;
       else if (array[y][x] == 5) // L
-	cout << color_yellow << "■" << color_normal;
+	      line += color_yellow + "■" + color_normal;
       else if (array[y][x] == 6) // Z
-	cout << color_pink << "■" << color_normal;
+	      line += color_pink   + "■" + color_normal;
       else if (array[y][x] == 7) // S
-	cout << color_purple << "■" << color_normal;
+	      line += color_purple + "■" + color_normal;
       else if (array[y][x] == 8) // I
-	cout << color_red << "■" << color_normal;
+	      line += color_red    + "■" + color_normal;
       else // if (array[y][x] == 1) // wall
-	cout << color_normal << "■" << color_normal;
+	      line += color_normal + "■" + color_normal;
     }
-    cout << endl;
+    screen += line + "\n";
   }
+  cout << screen;
 }
 #endif
 
@@ -184,7 +188,7 @@ void drawScreen(CTetris *board)
 int main(int argc, char *argv[]) {
   int dy, dx;
   char key = 0;
-
+  
   if (argc != 3) {
     cout << "usage: " << argv[0] << " dy dx" << endl;
     exit(1);

@@ -10,7 +10,9 @@ BlockShape Tetris::nBlock = {0, 0};
 Tetris::Tetris(int dy, int dx) {
   iScreenD.y = dy;
   iScreenD.x = dx;
-  iScreen = new Matrix(arrayScreen(), arrayScreenD.y, arrayScreenD.x);
+  int aryScreenDy = iScreenD.y + iScreenDw;
+  int aryScreenDx = iScreenD.x + iScreenDw * 2;
+  iScreen = new Matrix(arrayScreen(), aryScreenDy, aryScreenDx);
   oScreen = new Matrix(iScreen);
   justStarted = true;
 }
@@ -49,7 +51,7 @@ TetrisState Tetris::accept(char key) {
   state = Running;
   Matrix tempBlk;
   int currBlkStateBottom, currBlkStateRight;
-
+  
   if (key >= '0' && key <= ('0' + nBlock.type - 1)) {
     if (justStarted == false) {
       deleteFullLines();
@@ -63,7 +65,7 @@ TetrisState Tetris::accept(char key) {
     currBlkStateBottom = currBlkState.top + currBlk.get_dy();
     currBlkStateRight = currBlkState.left + currBlk.get_dx();
     tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);
-    tempBlk = tempBlk.binary()->add(currBlk.binary());
+    tempBlk = tempBlk.add(&currBlk);
     justStarted = false;
     cout << endl;
 
@@ -89,14 +91,14 @@ TetrisState Tetris::accept(char key) {
       currBlkStateBottom = currBlkState.top + currBlk.get_dy();
       currBlkStateRight = currBlkState.left + currBlk.get_dx();
       tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);
-      tempBlk = tempBlk.binary()->add(currBlk.binary());
+      tempBlk = tempBlk.add(&currBlk);
     }
   }
 
   currBlkStateBottom = currBlkState.top + currBlk.get_dy();
   currBlkStateRight = currBlkState.left + currBlk.get_dx();
   tempBlk = iScreen->clip(currBlkState.top, currBlkState.left, currBlkStateBottom, currBlkStateRight);
-  tempBlk = tempBlk.binary()->add(currBlk.binary());
+  tempBlk = tempBlk.add(&currBlk);
   
   if (tempBlk.anyGreaterThan(1)) { // undo
     if (key == 'a') {
@@ -125,26 +127,25 @@ TetrisState Tetris::accept(char key) {
   }
   oScreen->paste(iScreen, 0, 0);
   oScreen->paste(&tempBlk, currBlkState.top, currBlkState.left);
-  
   return state;
 }
 
 int* Tetris::arrayScreen() {
-  arrayScreenD.y = iScreenD.y + iScreenDw;
-  arrayScreenD.x = iScreenD.x + iScreenDw * 2;
+  int aryScreenDy = iScreenD.y + iScreenDw;
+  int aryScreenDx = iScreenD.x + iScreenDw * 2;
   
-  tempScreen = new int[arrayScreenD.y * arrayScreenD.x];
-  memset(tempScreen, 0, sizeof(int) * arrayScreenD.y * arrayScreenD.x);
+  tempScreen = new int[aryScreenDy * aryScreenDx];
+  memset(tempScreen, 0, sizeof(int) * aryScreenDy * aryScreenDx);
   
   for (int y = 0; y < iScreenD.y; ++y) {
     for (int x = iScreenDw; x < iScreenD.x + iScreenDw; ++x) {
-      tempScreen[y * (arrayScreenD.x) + x] = -1;
+      tempScreen[y * (aryScreenDx) + x] = -1;
     }
   }
 
-  for (int y = 0; y < arrayScreenD.y; ++y) {
-    for (int x = 0; x < arrayScreenD.x; ++x) {
-      tempScreen[y * (arrayScreenD.x) + x] += 1;
+  for (int y = 0; y < aryScreenDy; ++y) {
+    for (int x = 0; x < aryScreenDx; ++x) {
+      tempScreen[y * (aryScreenDx) + x] += 1;
     }
   }
 
@@ -155,10 +156,12 @@ void Tetris::deleteFullLines() {
   iScreen->paste(oScreen, 0, 0);
   int currBlkBottom = currBlkState.top + currBlk.get_dy();
   currBlkBottom = currBlkBottom < iScreenD.y ? currBlkBottom : iScreenD.y;
-
+  
+  fullLine.clear();
   for (int line = currBlkState.top; line < currBlkBottom; ++line) {    
     Matrix tempBlk = iScreen->clip(line, iScreenDw, line + 1, iScreenDw + iScreenD.x);
-    if (iScreenD.x == tempBlk.binary()->sum()) {
+    if (iScreenD.x == tempBlk.sum()) {
+      fullLine.push_back(line);
       tempBlk = iScreen->clip(0, iScreenDw, line, iScreenDw + iScreenD.x);
       iScreen->paste(&tempBlk, 1, iScreenDw);
     }

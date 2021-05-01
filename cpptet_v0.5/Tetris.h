@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Matrix.h"
 
 enum TetrisState { Running, NewBlock, Finished };
@@ -25,27 +26,24 @@ class Tetris {
   Tetris(int dy, int dx);
   static void init(int *setOfBlockArrays[], int blkTypes, int blkDegrees);
   TetrisState accept(char key);
-
   virtual ~Tetris();
-
   Matrix* oScreen; 
   static int iScreenDw;
 
- protected:  
-  static Matrix** setOfBlockObjects;
-  static BlockShape nBlock;
-  Matrix* iScreen;
-  BlockState currBlkState;
- 
- private:
+ protected:
   int* arrayScreen();
   void deleteFullLines();
-  void printSetOfBlock(); //testcode
-  
-  bool justStarted;
+  vector<int> fullLine;
   Idx iScreenD;
-  Idx arrayScreenD;
+  static Matrix** setOfBlockObjects;
+  static BlockShape nBlock;
+  BlockState currBlkState;
+  bool justStarted;
+    
+ private:
+  void printSetOfBlock(); //testcode
   int* tempScreen;
+  Matrix* iScreen;
   TetrisState state;
   Matrix currBlk;
 };
