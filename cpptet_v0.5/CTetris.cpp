@@ -4,6 +4,7 @@ Matrix** CTetris::setOfCBlockObjects = nullptr;
 
 CTetris::CTetris(int dy, int dx) : Tetris::Tetris(dy, dx) {
   iCScreen = new Matrix(oScreen);
+  iCScreen->mulc(nBlock.type + 1);
   oCScreen = new Matrix(iCScreen);
 }
 
@@ -17,7 +18,7 @@ void CTetris::init(int *setOfBlockArrays[], int blkTypes, int blkDegrees) {
   for(int i = 0; i < nBlock.type; ++i) { 
     for(int j = 0; j < nBlock.degree; ++j) {
       setOfCBlockObjects[i][j] = Matrix(setOfBlockObjects[i][j]);
-      setOfCBlockObjects[i][j].mulc(i + 2);
+      setOfCBlockObjects[i][j].mulc(i + 1);
     }
   }
 }

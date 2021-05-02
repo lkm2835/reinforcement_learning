@@ -158,21 +158,21 @@ void drawScreen(CTetris *board)
     for (int x = dw - 1; x < dx - dw + 1; x++) {
       if (array[y][x] == 0)
 	      line += color_normal + "□" + color_normal;
-      else if (array[y][x] == 2) // O
-	      line += color_blue   + "■" + color_normal;
-      else if (array[y][x] == 3) // T
-	      line += color_cyan   + "■" + color_normal;
-      else if (array[y][x] == 4) // J
-	      line += color_green  + "■" + color_normal;
-      else if (array[y][x] == 5) // L
-	      line += color_yellow + "■" + color_normal;
-      else if (array[y][x] == 6) // Z
-	      line += color_pink   + "■" + color_normal;
-      else if (array[y][x] == 7) // S
-	      line += color_purple + "■" + color_normal;
-      else if (array[y][x] == 8) // I
+      else if (array[y][x] == 1) // I
 	      line += color_red    + "■" + color_normal;
-      else // if (array[y][x] == 1) // wall
+      else if (array[y][x] == 2) // J
+	      line += color_green  + "■" + color_normal;
+      else if (array[y][x] == 3) // L
+	      line += color_yellow + "■" + color_normal;
+      else if (array[y][x] == 4) // O
+	      line += color_blue   + "■" + color_normal;
+      else if (array[y][x] == 5) // S
+	      line += color_purple + "■" + color_normal;
+      else if (array[y][x] == 6) // T
+	      line += color_cyan   + "■" + color_normal;
+      else if (array[y][x] == 7) // Z
+	      line += color_pink   + "■" + color_normal;
+      else // if (array[y][x] == 8) // wall
 	      line += color_normal + "■" + color_normal;
     }
     screen += line + "\n";
