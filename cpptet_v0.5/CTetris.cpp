@@ -57,7 +57,7 @@ CTetris::~CTetris() {
   for(int i = 0; i < nBlock.type; ++i) {
     delete [] setOfCBlockObjects[i];
   }
-  delete setOfCBlockObjects;
+  delete [] setOfCBlockObjects;
   delete oCScreen;
   delete iCScreen;
 }

@@ -173,7 +173,7 @@ Tetris::~Tetris() {
   for(int i = 0; i < nBlock.type; ++i) {
     delete [] setOfBlockObjects[i];
   }
-  delete setOfBlockObjects;
+  delete [] setOfBlockObjects;
   delete [] tempScreen;
   delete oScreen;
   delete iScreen;
