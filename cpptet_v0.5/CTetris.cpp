@@ -46,8 +46,8 @@ void CTetris::deleteFullLines() {
   Tetris::deleteFullLines();
   iCScreen->paste(oCScreen, 0, 0);
 
-  for (auto line = fullLine.begin(); line != fullLine.end(); ++line) {  
-    Matrix tempCBlk = iCScreen->clip(0, iScreenDw, *line, iScreenDw + iScreenD.x);
+  for(const auto& line : fullLine) {
+    Matrix tempCBlk = iCScreen->clip(0, iScreenDw, line, iScreenDw + iScreenD.x);
     iCScreen->paste(&tempCBlk, 1, iScreenDw);
   }
   oCScreen->paste(iCScreen, 0, 0);
