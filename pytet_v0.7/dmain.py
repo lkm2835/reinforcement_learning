@@ -47,7 +47,7 @@ def _printScreen(screen):
 	return
 
 def printScreen(screen):
-	clearScreen()
+	#clearScreen()
 	array = screen.get_array()
 
 	for y in range(screen.get_dy()-Tetris.iScreenDw):
@@ -198,7 +198,8 @@ if __name__ == "__main__":
 
 	Tetris.init(setOfBlockArrays)
 	board = ColorDecorator(Tetris(20, 15)) ### decorator pattern applied!!
-	
+	#board = Tetris(12,10)
+
 	idxBlockType = randint(0, nBlocks-1)
 	key = '0' + str(idxBlockType)
 	state = board.accept(key)
