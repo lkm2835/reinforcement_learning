@@ -61,11 +61,11 @@ def initSetOfBlockArrays():
 
     return setOfBlockArrays
     
-def processKey(window, board, key):
+def processKey(model, board, key):
 	global nBlocks 
 
 	state = board.accept(key)
-	printWindow(window, board.getScreen())
+	model.notifyObservers(board.getScreen())
           
 	if state != TetrisState.NewBlock:
 		return state
@@ -73,7 +73,7 @@ def processKey(window, board, key):
 	idxBlockType = randint(0, nBlocks-1)
 	key = str(idxBlockType)
 	state = board.accept(key)
-	printWindow(window, board.getScreen())
+	model.notifyObservers(board.getScreen())
 
 	if state != TetrisState.Finished:
 		return state
@@ -267,8 +267,7 @@ class Model(threading.Thread, Observer, Publisher):
 			if key == 'q':
 				state = TetrisState.Finished
 			else:
-				for observer in self.observers:
-					state = processKey(observer.window, board, key)
+				state = processKey(self, board, key)
 
 			if state == TetrisState.Finished:
 				isGameDone = True
@@ -278,6 +277,7 @@ class Model(threading.Thread, Observer, Publisher):
 
 		printMsg('%s terminated... Press any key to continue' % self.name)
 		time.sleep(1)
+		self.notifyObservers(board.getScreen())
 		return
 
 class View(threading.Thread, Observer):
@@ -309,8 +309,13 @@ class View(threading.Thread, Observer):
 		return
 
 	def run(self):
-		oScreen = self.read()
-		printWindow(self.window, oScreen)
+		global isGameDone
+		while not isGameDone:
+			oScreen = self.read()
+			printWindow(self.window, oScreen)
+		
+		printMsg('%s terminated... Press any key to continue' % self.name)
+		time.sleep(1)
 		return
 
 ##############################################################
