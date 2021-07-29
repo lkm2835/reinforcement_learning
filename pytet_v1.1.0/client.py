@@ -13,10 +13,17 @@ import curses
 ##############################################################
 ### Main code
 ##############################################################
-
 def main(args):
+	print("TEST")
+	
 	client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	client_socket.connect(('127.0.0.1', 10000))
+	try:
+		client_socket.connect(('127.0.0.1', 10000))
+		while True:
+			continue
+	except:
+		print("connect fail")
+		return
 	seedNum = list()
 	seedNum.append(str(randint(1,10000)))
 	seedNum.append(str(randint(1,10000))) 
@@ -86,5 +93,4 @@ def main(args):
 	time.sleep(1)
 
 curses.wrapper(main)
-
 ### end of main.py

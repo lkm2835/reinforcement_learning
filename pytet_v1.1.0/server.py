@@ -16,6 +16,31 @@ import ast
 ### Main code
 ##############################################################
 
+playerNumber = 0
+
+class Player(threading.Thread):
+	def __init__(self, *args, **kwargs):
+		super(View, self).__init__(*args[2:], **kwargs)
+		self.name = args[0]
+		self.socket = args[1]
+		return
+
+	def run(self):
+		while True:
+			data = self.socket.recv(1024)
+			seedNum = ast.literal_eval(data.decode())
+			
+		return
+
+def waitForPlayers():
+	server_socket = socket.socket(socket.AF_INET, socket_SOCK_STREAM)
+	ip = '127.0.0.1'
+	port = 10000
+	server_socket.bind((ip, port))
+	server_socket.listen(0)
+	client_socket, addr = server_socket.accpet()
+
+
 def main(args):
 	server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	server_socket.bind(('127.0.0.1', 10000))
