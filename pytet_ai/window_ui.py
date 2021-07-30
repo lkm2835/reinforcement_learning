@@ -54,7 +54,7 @@ class WindowUI:
         window.clear()
         window.addstr(0, 0, "□□□□□□□□□□□□□")
         window.addstr(1, 0, "□SCORE : " + str(score) + "\t\t□")
-        window.addstr(2, 0, "□□□□□□□□□□□□□")
+        window.addstr(2, 0, "□□□□□□□□□□□□□\n\n")
         cls.lock.acquire()
         window.refresh()
         cls.lock.release()

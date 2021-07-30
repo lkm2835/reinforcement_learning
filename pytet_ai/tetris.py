@@ -206,23 +206,16 @@ class Tetris():
         return self.state
 
     def deleteFullLines(self):
-        nDeleted = 0
-        nScanned = self.currBlk.get_dy()
+        self.iScreen = Matrix(self.oScreen)
+        bottom = self.top + self.currBlk.get_dy()
+        bottom = bottom if (bottom < self.iScreenDy) else self.iScreenDy
+        for line in range(self.top, bottom):
+            tempBlk = self.iScreen.clip(line, Tetris.iScreenDw, line + 1, Tetris.iScreenDw + self.iScreenDx)
+            if self.iScreenDx == tempBlk.sum():
+                tempBlk = self.iScreen.clip(0, Tetris.iScreenDw, line, Tetris.iScreenDw + self.iScreenDx)
+                self.iScreen.paste(tempBlk, 1, Tetris.iScreenDw)
 
-        if self.top + self.currBlk.get_dy() - 1 >= self.iScreenDy:
-            nScanned -= (self.top + self.currBlk.get_dy() - self.iScreenDy)
-
-        zero = Matrix([[ 0 for x in range(0, (self.iScreenDx - 2*Tetris.iScreenDw))]])
-        for y in range(nScanned - 1, -1, -1):
-            cy = self.top + y + nDeleted
-            line = self.oScreen.clip(cy, 0, cy+1, self.oScreen.get_dx())
-            if line.sum() == self.oScreen.get_dx():
-                temp = self.oScreen.clip(0, 0, cy, self.oScreen.get_dx())
-                self.oScreen.paste(temp, 1, 0)
-                self.oScreen.paste(zero, 0, Tetris.iScreenDw)
-                nDeleted += 1
-
-        return nScanned
+        self.oScreen = Matrix(self.iScreen)
 
     def getScreen(self):
         return self.oScreen
