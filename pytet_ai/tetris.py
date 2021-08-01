@@ -1,6 +1,43 @@
 from matrix import *
 from random import *
 from enum import Enum
+import sys
+
+is_log_mode = False
+if len(sys.argv) == 2 and sys.argv[1] == 'log':
+    is_log_mode = True
+
+is_replay_mode = False
+if len(sys.argv) == 2 and sys.argv[1] == 'replay':
+    is_replay_mode = True
+        
+def getChar():
+	ch = sys.stdin.read(1)
+	return ch
+
+def getKey(is_keystroke_needed):
+	global is_log_mode
+	global is_replay_mode
+
+	if is_replay_mode:
+		key = get_key_from_log()
+	elif is_keystroke_needed:
+		key = getChar()
+		if not key:
+			key = 's'
+	else:
+		idxBlockType = randint(0, Tetris.nBlocks-1)
+		key = '0' + str(idxBlockType)
+
+	if is_log_mode:
+		log_key(key)
+	return key
+
+def get_key_from_log():
+    return
+
+def log_key(key):
+    return
 
 class TetrisState(Enum):
     Running = 0
@@ -86,16 +123,13 @@ class Tetris():
 
     @classmethod
     def processKey(cls, model, board, key):
-        Tetris.nBlocks 
-
         state = board.accept(key)
         model.notifyObservers([board.getScreen(), board.score])
             
         if state != TetrisState.NewBlock:
             return state
 
-        idxBlockType = randint(0, Tetris.nBlocks-1)
-        key = str(idxBlockType)
+        key = getKey(False)
         state = board.accept(key)
         model.notifyObservers([board.getScreen(), board.score])
 

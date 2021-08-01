@@ -10,10 +10,6 @@ import threading
 ### Threading code (Observer pattern)
 ##############################################################
 
-def getChar():
-	ch = sys.stdin.read(1)
-	return ch
-
 class Publisher(metaclass = ABCMeta):
 	@abstractmethod
 	def addObserver(self, observer):
@@ -54,7 +50,7 @@ class KeyController(threading.Thread, Publisher):
 
 		while not isGameDone:
 			try:
-				key = getChar()
+				key = getKey(True)
 			except:
 				isGameDone = True
 				WindowUI.printMsg('getChar() wakes up!!')
