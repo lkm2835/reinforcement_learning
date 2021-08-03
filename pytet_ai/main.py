@@ -15,6 +15,7 @@ import curses
 ##############################################################
 
 def main(args):
+	readModeFromArgv()
 	screen = curses.initscr()
 	screen.clear()
 
@@ -69,8 +70,9 @@ def main(args):
 	string += ' terminated!!!'
 
 	WindowUI.printMsg(string)
-	time.sleep(2)
+	time.sleep(1)
 	WindowUI.printMsg('Program terminated...')
+	finishedModeFromArgv()
 	time.sleep(1)
 
 curses.wrapper(main)

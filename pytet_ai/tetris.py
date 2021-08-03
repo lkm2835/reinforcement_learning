@@ -4,18 +4,31 @@ from enum import Enum
 import sys
 
 is_log_mode = False
-if len(sys.argv) == 2 and sys.argv[1] == 'log':
-    is_log_mode = True
-
 is_replay_mode = False
-if len(sys.argv) == 2 and sys.argv[1] == 'replay':
-    is_replay_mode = True
-        
+
+def readModeFromArgv():
+    global is_log_mode
+    global is_replay_mode
+
+    if len(sys.argv) == 2 and sys.argv[1] == 'log':
+        is_log_mode = True
+        log_start()
+    
+    if len(sys.argv) == 2 and sys.argv[1] == 'replay':
+        is_replay_mode = True
+    return
+
+def finishedModeFromArgv():
+    global is_log_mode
+
+    if is_log_mode:
+        log_end()
+
 def getChar():
 	ch = sys.stdin.read(1)
 	return ch
 
-def getKey(is_keystroke_needed):
+def getKey(is_keystroke_needed, is_keystroke_by_time = False):
 	global is_log_mode
 	global is_replay_mode
 
@@ -25,6 +38,8 @@ def getKey(is_keystroke_needed):
 		key = getChar()
 		if not key:
 			key = 's'
+	elif is_keystroke_by_time:
+		key = 'y'
 	else:
 		idxBlockType = randint(0, Tetris.nBlocks-1)
 		key = '0' + str(idxBlockType)
@@ -36,7 +51,22 @@ def getKey(is_keystroke_needed):
 def get_key_from_log():
     return
 
+def log_start():
+    fp = open('keylog.py', 'w')
+    fp.write('keys = [\n')
+    fp.close()
+    return
+
+def log_end():
+    fp = open('keylog.py', 'a')
+    fp.write(']\n')
+    fp.close()
+    return
+
 def log_key(key):
+    fp = open('keylog.py', 'a')
+    fp.write('\'%c\',\n' % key[-1])
+    fp.close()
     return
 
 class TetrisState(Enum):

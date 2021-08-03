@@ -83,7 +83,8 @@ class TimeController(threading.Thread, Publisher):
 	def run(self):
 		while not isGameDone:
 			time.sleep(1)
-			self.notifyObservers('y')
+			key = getKey(False, True)
+			self.notifyObservers(key)
 
 		WindowUI.printMsg('%s terminated... Press any key to continue' % self.name)
 		time.sleep(1)
