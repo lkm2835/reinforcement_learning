@@ -137,8 +137,7 @@ class Model(threading.Thread, Observer, Publisher):
 		Tetris.init(setOfBlockArrays)
 		board = Tetris(20, 15)
 
-		idxBlockType = randint(0, Tetris.nBlocks-1)
-		key = str(idxBlockType)
+		key = getKey(False)
 		state = board.accept(key)
 		self.notifyObservers([board.getScreen(), board.score])
 
@@ -158,7 +157,7 @@ class Model(threading.Thread, Observer, Publisher):
 			if state == TetrisState.Finished:
 				isGameDone = True
 				WindowUI.printMsg('%s IS DEAD!!!' % self.name)
-				time.sleep(2)
+				time.sleep(1)
 				break
 
 		WindowUI.printMsg('%s terminated... Press any key to continue' % self.name)
