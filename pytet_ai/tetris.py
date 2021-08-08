@@ -49,10 +49,19 @@ def getKey(is_keystroke_needed, is_keystroke_by_time = False):
 	return key
 
 def get_key_from_log():
-    return
+    from keylog import replayKey
+    return replayKey()
 
 def log_start():
     fp = open('keylog.py', 'w')
+    generated_code = 'def replayKey():\n'
+    generated_code += '\tglobal keyidx\n'
+    generated_code += '\tglobal keys\n'
+    generated_code += '\tkey = keys[keyidx]\n'
+    generated_code += '\tkeyidx += 1\n'
+    generated_code += '\treturn key\n\n'
+    fp.write(generated_code)
+    fp.write('keyidx = 0\n')
     fp.write('keys = [\n')
     fp.close()
     return
