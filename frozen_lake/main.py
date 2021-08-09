@@ -14,18 +14,19 @@ def getChar():
     return ch
 
 if __name__ == "__main__":
-    board = FrozenLake()
+    environment = FrozenLake()
     isGameDone = False
 
     while not isGameDone:
-        board.printScreen()
-        key = getChar()
-        state = board.accept(key)
-        if state == FrozenLakeState.Failed:
+        environment.printScreen()
+        action = getChar()
+        state = environment.accept(action)
+        if state != FrozenLakeState.Running:
             isGameDone = True
-            print("\nFailed")
-        elif state == FrozenLakeState.Arrived:
-            isGameDone = True
-            print("\nArrived")
 
-
+    environment.printScreen()
+    if state == FrozenLakeState.Failed:
+        print("\nFailed\n")
+    elif state == FrozenLakeState.Arrived:
+        print("\nArrived\n")
+    print("Game Over!\n")
