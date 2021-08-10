@@ -1,4 +1,5 @@
 from enum import Enum
+import numpy as np
 import os
 
 class FrozenLakeState(Enum):
@@ -20,6 +21,8 @@ class FrozenLake():
                          ['O', 'F', 'F', 'F', 'H', 'O'],
                          ['O', 'H', 'F', 'F', 'G', 'O'],
                          ['O', 'O', 'O', 'O', 'O', 'O'] ]
+        self.history = np.zeros([FrozenLake.env_y_+2,FrozenLake.env_y_+2], dtype = np.int32)
+        self.history[self.curr_y_][self.curr_x_] += 1
         return
 
     def accept(self, action):
@@ -38,6 +41,8 @@ class FrozenLake():
         elif action.upper() == 'A':
             self.curr_x_ -= 1
 
+        self.history[self.curr_y_][self.curr_x_] += 1
+
         if self.oScreen[self.curr_y_][self.curr_x_] == 'H':
             self.state = FrozenLakeState.Failed
             is_game_done = True
@@ -48,6 +53,7 @@ class FrozenLake():
             is_game_done = True
 
         if self.oScreen[self.curr_y_][self.curr_x_] == 'O':
+            self.history[self.curr_y_][self.curr_x_] -= 1
             if action.upper() == 'W':
                 self.curr_y_ += 1
             elif action.upper() == 'S':
@@ -62,6 +68,11 @@ class FrozenLake():
     def getCurrYX(self):
         return self.curr_y_-1, self.curr_x_-1
 
+    def addHistory(self, h):
+        for i in range(1, len(self.history)-1):
+            for j in range(1, len(self.history[i])-1):
+                h[i-1][j-1] += self.history[i][j]
+
     def printScreen(self):
         #os.system('clear')
         for i in range(1, len(self.oScreen)-1):
@@ -73,4 +84,11 @@ class FrozenLake():
             print()
         print()
         return
+    
+    def printHistroy(self):
+        for i in range(1, len(self.history)-1):
+            for j in range(1, len(self.history[i])-1):
+                print(self.history[i][j], end = " ")
+            print()
+        print()
             

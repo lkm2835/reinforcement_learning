@@ -24,8 +24,9 @@ if __name__ == "__main__":
     pad = ['W', 'S', 'D', 'A', 'Q']
 
     Q = np.zeros([FrozenLake.env_y_, FrozenLake.env_x_, FrozenLake.action_n_])
+    history = np.zeros([FrozenLake.env_y_, FrozenLake.env_x_], dtype = np.int32)
 
-    num_episodes = 100
+    num_episodes = 1000
     for i in range(num_episodes):
         print("episode : ", i + 1, "\n")
         environment = FrozenLake()
@@ -51,6 +52,8 @@ if __name__ == "__main__":
             elif environment.state == FrozenLakeState.Arrived:
                 environment.printScreen()
                 #print("Arrived")
-        
-        print()
+
+        environment.addHistory(history)
+        #environment.printHistroy()
         #print(Q)
+    print(history)
