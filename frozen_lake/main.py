@@ -3,6 +3,7 @@ import tty
 import termios
 import numpy as np
 import random as pr
+import matplotlib.pyplot as plt
 from frozen_lake import *
 
 def getChar():
@@ -14,6 +15,16 @@ def getChar():
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
+
+def heatmapShow(matrix, is_blocking=True, time=0):
+    plt.figure(figsize=(4,4))
+    plt.xticks(np.arange(4))
+    plt.yticks(np.arange(4))
+    plt.imshow(history, cmap='Reds')
+    plt.colorbar()
+    plt.show(block=is_blocking)
+    plt.pause(time)
+    plt.close()
 
 def rargmax(vector):
     m = np.amax(vector)
@@ -57,3 +68,4 @@ if __name__ == "__main__":
         #environment.printHistroy()
         #print(Q)
     print(history)
+    heatmapShow(history)
