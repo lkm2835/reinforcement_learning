@@ -4,6 +4,7 @@ import termios
 import numpy as np
 import random as pr
 import matplotlib.pyplot as plt
+import math
 from frozen_lake import *
 
 def getChar():
@@ -16,12 +17,19 @@ def getChar():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
-def heatmapShow(matrix, is_blocking=True, time=0):
-    plt.figure(figsize=(4,4))
-    plt.xticks(np.arange(4))
-    plt.yticks(np.arange(4))
-    plt.imshow(history, cmap='Reds')
-    plt.colorbar()
+def heatmapShow(matrix, num_subplots = 1, is_blocking=True, time=0):
+    fig = plt.figure(figsize=(10, 10))
+
+    ax = list()
+    for i in range(1, num_subplots+1):
+        ax.append(fig.add_subplot(int(math.sqrt(num_subplots)), int(math.sqrt(num_subplots)), i))
+
+    for i in range(num_subplots):
+        ax[i].set_xticks(np.arange(4))
+        ax[i].set_yticks(np.arange(4))
+        ax[i].imshow(matrix[i], cmap='Reds')
+
+    #plt.colorbar()
     plt.show(block=is_blocking)
     plt.pause(time)
     plt.close()
@@ -34,38 +42,40 @@ def rargmax(vector):
 if __name__ == "__main__":
     pad = ['W', 'S', 'D', 'A', 'Q']
 
-    Q = np.zeros([FrozenLake.env_y_, FrozenLake.env_x_, FrozenLake.action_n_])
-    history = np.zeros([FrozenLake.env_y_, FrozenLake.env_x_], dtype = np.int32)
+    games = 36
+    history = np.zeros([games, FrozenLake.env_y_, FrozenLake.env_x_], dtype = np.int32)
 
-    num_episodes = 1000
-    for i in range(num_episodes):
-        print("episode : ", i + 1, "\n")
-        environment = FrozenLake()
-        is_game_done = False
+    num_episodes = 2000
+    for game in range(games):
+        Q = np.zeros([FrozenLake.env_y_, FrozenLake.env_x_, FrozenLake.action_n_])
+        for i in range(num_episodes):
+            #print("episode : ", i + 1, "\n")
+            environment = FrozenLake()
+            is_game_done = False
+            while not is_game_done:
+                #board.printScreen()
+                #action = getChar()
+                #state = board.accept(action)
 
-        while not is_game_done:
-            #board.printScreen()
-            #action = getChar()
-            #state = board.accept(action)
+                y_, x_ = environment.getCurrYX()
+                action = rargmax(Q[y_][x_][:].reshape(environment.action_n_))
+                new_y_, new_x_, reward, done = environment.accept(pad[action])
 
-            y_, x_ = environment.getCurrYX()
-            action = rargmax(Q[y_][x_][:].reshape(environment.action_n_))
-            new_y_, new_x_, reward, done = environment.accept(pad[action])
+                Q[y_][x_][action] = reward + np.max(Q[new_y_][new_x_][:])
 
-            Q[y_][x_][action] = reward + np.max(Q[new_y_][new_x_][:])
+                is_game_done = done
 
-            is_game_done = done
+                """
+                if environment.state == FrozenLakeState.Failed:
+                    environment.printScreen()
+                    #print("Failed")
 
-            if environment.state == FrozenLakeState.Failed:
-                environment.printScreen()
-                #print("Failed")
-
-            elif environment.state == FrozenLakeState.Arrived:
-                environment.printScreen()
-                #print("Arrived")
-
-        history += environment.getHistory()
+                elif environment.state == FrozenLakeState.Arrived:
+                    environment.printScreen()
+                    #print("Arrived")
+                """
+            history[game] += environment.getHistory()
         #environment.printHistroy()
-        #print(Q)
-    print(history)
-    heatmapShow(history)
+        #print(Q, "\n")
+        print(history[game], "\n")
+    heatmapShow(history, games)
