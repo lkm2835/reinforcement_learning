@@ -68,10 +68,8 @@ class FrozenLake():
     def getCurrYX(self):
         return self.curr_y_-1, self.curr_x_-1
 
-    def addHistory(self, h):
-        for i in range(1, len(self.history)-1):
-            for j in range(1, len(self.history[i])-1):
-                h[i-1][j-1] += self.history[i][j]
+    def getHistory(self):
+        return self.history[1:-1, 1:-1]
 
     def printScreen(self):
         #os.system('clear')

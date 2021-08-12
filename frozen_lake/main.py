@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 environment.printScreen()
                 #print("Arrived")
 
-        environment.addHistory(history)
+        history += environment.getHistory()
         #environment.printHistroy()
         #print(Q)
     print(history)
