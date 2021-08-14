@@ -12,7 +12,8 @@ class FrozenLake():
     env_x_ = 4
     env_y_ = 4
     action_n_ = 4
-    def __init__(self):
+    def __init__(self, is_slippery = False):
+        self.is_slippery = is_slippery
         self.curr_x_ = 1
         self.curr_y_ = 1
         self.oScreen = [ ['O', 'O', 'O', 'O', 'O', 'O'],
@@ -29,6 +30,14 @@ class FrozenLake():
         self.state = FrozenLakeState.Running
         reward = 0
         is_game_done = False
+
+        if self.is_slippery == True:
+            if np.random.random() < 0.3:
+                slip = ['W', 'S', 'D', 'A', 'stop']
+                action = slip[np.random.randint(5)]
+                if action == 'stop':
+                    return self.curr_y_-1, self.curr_x_-1, reward, is_game_done
+
 
         if action.upper() == 'Q':
             self.state = FrozenLakeState.Failed

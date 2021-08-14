@@ -48,10 +48,12 @@ if __name__ == "__main__":
     num_episodes = 2000
     discounted = 0.9
     for game in range(games):
+        print("Games : ", game+1, "\n")
         Q = np.zeros([FrozenLake.env_y_, FrozenLake.env_x_, FrozenLake.action_n_])
+        Arrived = 0
         for i in range(num_episodes):
             #print("episode : ", i + 1, "\n")
-            environment = FrozenLake()
+            environment = FrozenLake(is_slippery = True)
             is_game_done = False
             while not is_game_done:
                 #board.printScreen()
@@ -70,17 +72,10 @@ if __name__ == "__main__":
 
                 is_game_done = done
 
-                """
-                if environment.state == FrozenLakeState.Failed:
-                    environment.printScreen()
-                    #print("Failed")
-
-                elif environment.state == FrozenLakeState.Arrived:
-                    environment.printScreen()
-                    #print("Arrived")
-                """
+            if environment.state == FrozenLakeState.Arrived:
+                Arrived += 1
             history[game] += environment.getHistory()
-        #environment.printHistroy()
         #print(Q, "\n")
-        #print(history[game], "\n")
+        print(history[game], "\n")
+        print("Arrived :  {0:0.2f}".format(Arrived / num_episodes * 100), "%\n\n")
     heatmapShow(history, games)
