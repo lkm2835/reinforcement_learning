@@ -17,12 +17,14 @@ def getChar():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
-def heatmapShow(matrix, num_subplots = 1, is_blocking=True, time=0):
+def heatmapShow(matrix, title, num_subplots = 1, is_blocking=True, time=0):
     fig = plt.figure(figsize=(10, 10))
+    plt.subplots_adjust(bottom=0.1, left=0.001, right=0.999, top=0.90, hspace=0.75)
 
     ax = list()
     for i in range(1, num_subplots+1):
         ax.append(fig.add_subplot(int(math.sqrt(num_subplots)), int(math.sqrt(num_subplots)), i))
+        plt.title("Arrived:{0:0.2f}".format(title[i-1]), size = 12)
 
     for i in range(num_subplots):
         ax[i].set_xticks(np.arange(4))
@@ -44,6 +46,7 @@ if __name__ == "__main__":
 
     games = 36
     history = np.zeros([games, FrozenLake.env_y_, FrozenLake.env_x_], dtype = np.int32)
+    Arrived_rate = np.zeros([games])
 
     num_episodes = 2000
     discounted = 0.9
@@ -77,5 +80,6 @@ if __name__ == "__main__":
             history[game] += environment.getHistory()
         #print(Q, "\n")
         print(history[game], "\n")
+        Arrived_rate[game] = Arrived / num_episodes * 100
         print("Arrived :  {0:0.2f}".format(Arrived / num_episodes * 100), "%\n\n")
-    heatmapShow(history, games)
+    heatmapShow(history, Arrived_rate, games)
