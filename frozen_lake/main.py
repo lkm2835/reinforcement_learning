@@ -48,8 +48,9 @@ if __name__ == "__main__":
     history = np.zeros([games, FrozenLake.env_y_, FrozenLake.env_x_], dtype = np.int32)
     Arrived_rate = np.zeros([games])
 
-    num_episodes = 2000
+    num_episodes = 10000
     discounted = 0.9
+    learning_rate = 0.2
     for game in range(games):
         print("Games : ", game+1, "\n")
         Q = np.zeros([FrozenLake.env_y_, FrozenLake.env_x_, FrozenLake.action_n_])
@@ -71,7 +72,7 @@ if __name__ == "__main__":
                     action = rargmax(Q[y_][x_][:].reshape(environment.action_n_))
                 new_y_, new_x_, reward, done = environment.accept(pad[action])
                 
-                Q[y_][x_][action] = reward + discounted * np.max(Q[new_y_][new_x_][:])
+                Q[y_][x_][action] = (1 - learning_rate) * Q[y_][x_][action] + learning_rate * (reward + discounted * np.max(Q[new_y_][new_x_][:]))
 
                 is_game_done = done
 
