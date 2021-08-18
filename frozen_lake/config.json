@@ -1,0 +1,7 @@
+{
+    "num_episodes": 2000,
+    "Q_learning_method": 3,
+    "discounted": 0.9,
+    "learning_rate": 0.2,
+    "slippery": true
+}
