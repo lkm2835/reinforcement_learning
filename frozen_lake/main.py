@@ -28,10 +28,12 @@ def heatmapShow(matrix, title, num_subplots = 1, is_blocking=True, time=0):
     plt.pause(time)
     plt.close()
 
+
 def rargmax(vector):
     m = np.amax(vector)
     indices = np.nonzero(vector == m)[0]
     return pr.choice(indices)
+
 
 def main(config):
     pad = ['W', 'S', 'D', 'A', 'Q']
@@ -76,6 +78,7 @@ def main(config):
         print("Arrived :  {0:0.2f}".format(Arrived_rate[game]), "%\n\n")
     heatmapShow(action_history, Arrived_rate, games)
     return
+
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser(description='Parameters', formatter_class=RawTextHelpFormatter)

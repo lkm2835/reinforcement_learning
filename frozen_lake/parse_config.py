@@ -2,7 +2,7 @@ import json
 
 class ConfigParser:
     def __init__(self, config):
-        self.config = config
+        self._config = config
         return
 
     @classmethod
@@ -38,8 +38,12 @@ class ConfigParser:
             if args.slippery.lower() in ('n', 'no', 'f', 'false'):
                 config['slippery'] = False
                 config['default'] = False  
-                
+
         return cls(config)
 
     def __getitem__(self, name):
         return self.config[name]
+
+    @property
+    def config(self):
+        return self._config
