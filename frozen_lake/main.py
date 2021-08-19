@@ -33,57 +33,7 @@ def rargmax(vector):
     indices = np.nonzero(vector == m)[0]
     return pr.choice(indices)
 
-if __name__ == "__main__":
-    args = argparse.ArgumentParser(description='Parameters', formatter_class=RawTextHelpFormatter)
-    args.add_argument('-c', '--config', default=None, type=str, help='config file path (default: None')
-    
-    config = ConfigParser.from_args(args)
-    '''
-    args.add_argument('-ep', '--episodes', type=int, help='number of episodes for one game')
-    args.add_argument('-lm', '--learning_method', type=int, help=
-                            'choose Q_learning_method 1~3\n'
-                            'method 1 : use learning_rate, discounted_reward\n'
-                            'method 2 : use discounted_reward\n'
-                            'method 3 : vanila')
-    args.add_argument('-dr', '--discount_rate', type=float, help='discount reward rate')
-    args.add_argument('-lr', '--learning_rate', type=float, help='learning rate')
-    args.add_argument('-sl','--slippery', type=str, help='slippery')
-    args = vars(args.parse_args())
-    
-    is_default = True
-
-    if args['episodes'] != None:
-        config['num_episodes'] = args['episodes']
-        is_default = False
-
-    if args['learning_method'] != None:
-        config['Q_learning_method'] = args['learning_method']
-        if config['Q_learning_method'] == 1 or config['Q_learning_method'] == 2:
-            is_default = False
-
-    if args['discount_rate'] != None:
-        config['discounted'] = args['discount_rate']
-        is_default = False
-    
-    if args['learning_rate'] != None:
-        config['learning_rate'] = args['learning_rate']
-        is_default = False
-
-    if args['slippery'] != None:
-        if args['slippery'].lower() in ('n', 'no', 'f', 'false'):
-            config['slippery'] = False
-            is_default = False
-    '''
-    
-    print("========================\n")
-    print("DEFAULT      ->\t", is_default)
-    print("learning_method:\t", config['Q_learning_method'])
-    print("num_episodes   :\t", config['num_episodes'])
-    print("discount_rate  :\t", config['discounted'])
-    print("learning_rate  :\t", config['learning_rate'])
-    print("slippery_mode  :\t", config['slippery'])
-    print("\n========================\n")
-    
+def main(config):
     pad = ['W', 'S', 'D', 'A', 'Q']
 
     games = 36
@@ -125,3 +75,32 @@ if __name__ == "__main__":
         Arrived_rate[game] = Arrived / config['num_episodes'] * 100
         print("Arrived :  {0:0.2f}".format(Arrived_rate[game]), "%\n\n")
     heatmapShow(action_history, Arrived_rate, games)
+    return
+
+if __name__ == "__main__":
+    args = argparse.ArgumentParser(description='Parameters', formatter_class=RawTextHelpFormatter)
+    args.add_argument('-c', '--config', default=None, type=str, help='config file path (default: None')
+        
+    args.add_argument('-ep', '--episodes', type=int, help='number of episodes for one game')
+    args.add_argument('-lm', '--learning_method', type=int, help=
+                            'choose Q_learning_method 1~3\n'
+                            'method 1 : use learning_rate, discounted_reward\n'
+                            'method 2 : use discounted_reward\n'
+                            'method 3 : vanila')
+    args.add_argument('-dr', '--discount_rate', type=float, help='discount reward rate')
+    args.add_argument('-lr', '--learning_rate', type=float, help='learning rate')
+    args.add_argument('-sl','--slippery', type=str, help='slippery')
+
+    config = ConfigParser.from_args(args)
+
+    print("========================\n")
+    print("cfg_fname      :\t", config['fname'])
+    print("DEFAULT       ->\t", config['default'])
+    print("learning_method:\t", config['Q_learning_method'])
+    print("num_episodes   :\t", config['num_episodes'])
+    print("discount_rate  :\t", config['discounted'])
+    print("learning_rate  :\t", config['learning_rate'])
+    print("slippery_mode  :\t", config['slippery'])
+    print("\n========================\n")
+    
+    main(config)    
