@@ -39,13 +39,13 @@ $ python3 main.py -c config.json
 ### Another usage
 Another usage without modifying config files
 ```
- $ python3 main.py --learning_method 2 --episodes 3000 --discount_rate 0.5 --learning_rate 0.3 --slippery False
+ $ python3 main.py -c config.json --learning_method 2 --episodes 3000 --discount_rate 0.5 --learning_rate 0.3 --slippery False
 ```
 
 
 if you want, use a short.
 ```
- $ python3 main.py -lm 2 -ep 3000 -dr 0.5 -lr 0.3 -sp N
+ $ python3 main.py -c config.json -lm 2 -ep 3000 -dr 0.5 -lr 0.3 -sp N
 ```
 
 ![user_setting](./readme_image/user_setting.PNG)
