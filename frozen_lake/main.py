@@ -1,8 +1,6 @@
-import json
 import numpy as np
 import random as pr
 import matplotlib.pyplot as plt
-import math
 import argparse
 from argparse import RawTextHelpFormatter
 
@@ -15,7 +13,7 @@ def heatmapShow(matrix, title, num_subplots = 1, is_blocking=True, time=0):
 
     ax = list()
     for i in range(1, num_subplots+1):
-        ax.append(fig.add_subplot(int(math.sqrt(num_subplots)), int(math.sqrt(num_subplots)), i))
+        ax.append(fig.add_subplot(int(np.sqrt(num_subplots)), int(np.sqrt(num_subplots)), i))
         plt.title("Arrived:{0:0.2f}".format(title[i-1]), size = 12)
 
     for i in range(num_subplots):

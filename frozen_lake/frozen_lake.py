@@ -1,6 +1,5 @@
 from enum import Enum
 import numpy as np
-import os
 
 class FrozenLakeState(Enum):
     Running = 0
@@ -81,7 +80,6 @@ class FrozenLake():
         return self.history[1:-1, 1:-1]
 
     def printScreen(self):
-        #os.system('clear')
         for i in range(1, len(self.oScreen)-1):
             for j in range(1, len(self.oScreen[i])-1):
                 if i == self.curr_y_ and j == self.curr_x_:
