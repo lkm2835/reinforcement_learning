@@ -33,7 +33,7 @@ def rargmax(vector):
     return pr.choice(indices)
 
 
-def main(config):
+def Q_table(config):
     pad = ['W', 'S', 'D', 'A', 'Q']
 
     games = 36
@@ -77,6 +77,8 @@ def main(config):
     heatmapShow(action_history, Arrived_rate, games)
     return
 
+def Q_network(config):
+    return
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser(description='Parameters', formatter_class=RawTextHelpFormatter)
@@ -90,7 +92,7 @@ if __name__ == "__main__":
                             'method 3 : vanila')
     args.add_argument('-dr', '--discount_rate', type=float, help='discount reward rate')
     args.add_argument('-lr', '--learning_rate', type=float, help='learning rate')
-    args.add_argument('-sl','--slippery', type=str, help='slippery')
+    args.add_argument('-sp','--slippery', type=str, help='slippery')
 
     config = ConfigParser.from_args(args)
 
@@ -104,4 +106,4 @@ if __name__ == "__main__":
     print("slippery_mode  :\t", config['slippery'])
     print("\n========================\n")
     
-    main(config)    
+    Q_table(config)    
