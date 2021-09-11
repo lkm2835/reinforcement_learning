@@ -83,7 +83,9 @@ def Q_network(config):
 if __name__ == "__main__":
     args = argparse.ArgumentParser(description='Parameters', formatter_class=RawTextHelpFormatter)
     args.add_argument('-c', '--config', default=None, type=str, help='config file path (default: None')
-        
+
+    args.add_argument('-q', '--q_algorithm', default='Q_table', type=str, help='Q_table or Q_network')
+
     args.add_argument('-ep', '--episodes', type=int, help='number of episodes for one game')
     args.add_argument('-lm', '--learning_method', type=int, help=
                             'choose Q_learning_method 1~3\n'
