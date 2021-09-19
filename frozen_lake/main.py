@@ -2,10 +2,18 @@ import numpy as np
 import random as pr
 import matplotlib.pyplot as plt
 import argparse
+import os
 from argparse import RawTextHelpFormatter
+from pathlib import Path
 
 from frozen_lake import *
 from parse_config import ConfigParser
+
+
+def seed_setting(seed):
+    np.random.seed(seed)
+    random.seed(seed)
+
 
 def heatmapShow(matrix, title, num_subplots = 1, is_blocking=True, time=0):
     fig = plt.figure(figsize=(10, 10))
@@ -26,6 +34,22 @@ def heatmapShow(matrix, title, num_subplots = 1, is_blocking=True, time=0):
     plt.pause(time)
     plt.close()
 
+
+def increment_path(path):
+    path_ = Path(path.split('/')[0])
+    if not path_.exists():
+        os.mkdir(path_)
+    
+    n = 0
+    while True:
+        path_ = Path(f"{path}{n}")
+        if not path_.exists():
+            os.mkdir(path_)
+            break
+        elif path_.exists():
+            n += 1
+    
+    return str(path_)
 
 def rargmax(vector):
     m = np.amax(vector)
