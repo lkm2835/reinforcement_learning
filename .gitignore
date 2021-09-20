@@ -5,3 +5,4 @@
 __pycache__
 *.pyc
 keylog.py
+frozen_lake/saved/*
