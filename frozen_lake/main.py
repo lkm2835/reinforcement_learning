@@ -12,12 +12,13 @@ from parse_config import ConfigParser
 
 def seed_setting(seed):
     np.random.seed(seed)
-    random.seed(seed)
+    pr.seed(seed)
 
 
-def heatmapShow(matrix, title, num_subplots = 1, is_blocking=True, time=0):
+def heatmapShow(matrix, config, title, num_subplots = 1):
     fig = plt.figure(figsize=(10, 10))
     plt.subplots_adjust(bottom=0.1, left=0.001, right=0.999, top=0.90, hspace=0.75)
+    plt.suptitle(config['algorithm'])
 
     ax = list()
     for i in range(1, num_subplots+1):
@@ -29,10 +30,7 @@ def heatmapShow(matrix, title, num_subplots = 1, is_blocking=True, time=0):
         ax[i].set_yticks(np.arange(4))
         ax[i].imshow(matrix[i], cmap='Reds')
 
-    #plt.colorbar()
-    plt.show(block=is_blocking)
-    plt.pause(time)
-    plt.close()
+    return
 
 
 def increment_path(path):
@@ -44,6 +42,7 @@ def increment_path(path):
     while True:
         path_ = Path(f"{path}{n}")
         if not path_.exists():
+            print(f"mkdir {path_}")
             os.mkdir(path_)
             break
         elif path_.exists():
@@ -98,7 +97,7 @@ def Q_table(config):
         print(action_history[game], "\n")
         Arrived_rate[game] = Arrived / config['num_episodes'] * 100
         print("Arrived :  {0:0.2f}".format(Arrived_rate[game]), "%\n\n")
-    heatmapShow(action_history, Arrived_rate, games)
+    heatmapShow(action_history, config, Arrived_rate, games)
     return
 
 def Q_network(config):
@@ -107,18 +106,8 @@ def Q_network(config):
 if __name__ == "__main__":
     args = argparse.ArgumentParser(description='Parameters', formatter_class=RawTextHelpFormatter)
     args.add_argument('-c', '--config', default=None, type=str, help='config file path (default: None')
-
     args.add_argument('-q', '--q_algorithm', default='Q_table', type=str, help='Q_table or Q_network')
-
-    args.add_argument('-ep', '--episodes', type=int, help='number of episodes for one game')
-    args.add_argument('-lm', '--learning_method', type=int, help=
-                            'choose Q_learning_method 1~3\n'
-                            'method 1 : use learning_rate, discounted_reward\n'
-                            'method 2 : use discounted_reward\n'
-                            'method 3 : vanila')
-    args.add_argument('-dr', '--discount_rate', type=float, help='discount reward rate')
-    args.add_argument('-lr', '--learning_rate', type=float, help='learning rate')
-    args.add_argument('-sp','--slippery', type=str, help='slippery')
+    args.add_argument('-s', '--saved_dir', default='exp', type=str, help='saved directory saved/your_path')
 
     config = ConfigParser.from_args(args)
 
@@ -131,5 +120,10 @@ if __name__ == "__main__":
     print("learning_rate  :\t", config['learning_rate'])
     print("slippery_mode  :\t", config['slippery'])
     print("\n========================\n")
+
+    seed_setting(config['seed'])
+    saved_path = increment_path(f"saved/{config['saved_dir']}")
+    os.system(f"cp {config['fname']} {saved_path}")
     
-    Q_table(config)    
+    Q_table(config)
+    plt.savefig(f'{saved_path}/result.png', dpi=300)

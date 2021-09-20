@@ -2,6 +2,7 @@
     "Q_table": {
         "fname": "config.json",
         "default": true,
+        "seed": 100,
         "num_episodes": 2000,
         "Q_learning_method": 3,
         "discounted": 0.9,
