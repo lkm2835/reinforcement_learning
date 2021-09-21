@@ -53,6 +53,7 @@ class FrozenLake():
 
         if self.oScreen[self.curr_y_][self.curr_x_] == 'H':
             self.state = FrozenLakeState.Failed
+            #reward = -1
             is_game_done = True
 
         if self.oScreen[self.curr_y_][self.curr_x_] == 'G':
