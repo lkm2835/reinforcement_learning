@@ -2,7 +2,6 @@ from tetris import *
 from abc import *
 from window_ui import *
 
-import sys
 import time
 import threading
 

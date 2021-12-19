@@ -2,7 +2,6 @@ from random import *
 from window_ui import *
 from tetris_threading import *
 
-import os
 import sys
 import tty
 import termios
