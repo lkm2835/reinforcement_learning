@@ -1,10 +1,12 @@
 import argparse
+import os
 from argparse import RawTextHelpFormatter
 from pathlib import Path
 
 from parse_config import ConfigParser
 from q_table import *
 from q_network import *
+
 
 def seed_setting(seed):
     np.random.seed(seed)

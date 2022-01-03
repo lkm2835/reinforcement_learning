@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class QNModel(nn.Module):
     def __init__(self):
         super(QNModel, self).__init__()
@@ -13,6 +14,7 @@ class QNModel(nn.Module):
         x = self.fc1(x)
         #x = self.fc2(x)
         return x
+
 
 def Q_network(config):
     pad = ['W', 'S', 'D', 'A', 'Q']

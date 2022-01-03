@@ -1,7 +1,6 @@
 import numpy as np
 import random as pr
 import matplotlib.pyplot as plt
-import os
 
 from frozen_lake import *
 
@@ -20,8 +19,6 @@ def heatmapShow(matrix, config, title, num_subplots = 1):
         ax[i].set_xticks(np.arange(4))
         ax[i].set_yticks(np.arange(4))
         ax[i].imshow(matrix[i], cmap='Reds')
-
-    return
 
 
 def rargmax(vector):
@@ -71,4 +68,3 @@ def Q_table(config):
         Arrived_rate[game] = Arrived / config['num_episodes'] * 100
         print("Arrived :  {0:0.2f}".format(Arrived_rate[game]), "%\n\n")
     heatmapShow(action_history, config, Arrived_rate, games)
-    return

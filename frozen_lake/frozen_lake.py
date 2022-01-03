@@ -1,6 +1,7 @@
 from enum import Enum
 import numpy as np
 
+
 class FrozenLakeState(Enum):
     Running = 0
     Failed = 1
